@@ -19,6 +19,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копируем все остальные файлы
 COPY . .
 
+# Создаем непривилегированного пользователя
+RUN useradd -m myuser
+
+# Переключаемся на непривилегированного пользователя
+USER myuser
+
 # Указываем порт
 EXPOSE 5000
 

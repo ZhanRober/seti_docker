@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   backend:
     build:
@@ -10,9 +8,10 @@ services:
       - ./backend:/app
     depends_on:
       - db
+    env_file:
+      - .env
     environment:
-      - FLASK_ENV=development
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/mydb
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
 
   client:
     build:
@@ -21,8 +20,8 @@ services:
       - "3000:3000"
     volumes:
       - ./client:/app
-    environment:
-      - REACT_APP_BACKEND_URL=http://localhost:5000
+    env_file:
+      - .env
 
   db:
     image: postgres:13
@@ -30,7 +29,5 @@ services:
       - "5432:5432"
     volumes:
       - ./db:/docker-entrypoint-initdb.d
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydb
+    env_file:
+      - .env
